@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Equipos - Sánchez Soccer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo-container"><img src="img/Logo.png" class="main-logo"></div>
+            <nav class="menu">
+                <a href="index.html">🏠 Inicio</a>
+                <a href="equipos.html" class="active">⚽ Equipos</a>
+                <a href="partidos.html">📅 Partidos</a>
+                <a href="posiciones.html">🏆 Posiciones</a>
+                <a href="goleo.html">👟 Goleo</a>
+                <a href="jugadores.html">👥 Jugadores</a>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+                <div class="seccion-titulo"><h1>Gestión de Equipos</h1></div>
+                <button class="btn-primary" onclick="abrirM()">+ Nuevo Equipo</button>
+            </div>
+            <table class="tabla-admin">
+                <thead><tr><th>Escudo</th><th>Nombre</th><th>Delegado</th><th>Acciones</th></tr></thead>
+                <tbody id="lista-e"></tbody>
+            </table>
+        </main>
+    </div>
+
+    <div id="modal-e" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Nuevo Equipo</h3><br>
+            <input type="file" id="e-logo" accept="image/*" style="margin-bottom:10px;">
+            <input type="text" id="n-eq" placeholder="Nombre" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid #ddd;">
+            <input type="text" id="d-eq" placeholder="Delegado" style="width:100%; padding:10px; margin-bottom:20px; border-radius:8px; border:1px solid #ddd;">
+            <button class="btn-primary" style="width:100%" onclick="guardarE()">Guardar</button>
+            <button onclick="cerrarM()" style="width:100%; border:none; color:red; margin-top:10px; cursor:pointer;">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        let tempUrl = "https://ui-avatars.com/api/?name=Eq";
+        document.getElementById('e-logo').onchange = e => { tempUrl = URL.createObjectURL(e.target.files[0]); };
+        function abrirM() { document.getElementById('modal-e').style.display='flex'; }
+        function cerrarM() { document.getElementById('modal-e').style.display='none'; }
+        function guardarE() {
+            const n = document.getElementById('n-eq').value;
+            const d = document.getElementById('d-eq').value;
+            if(n && d) {
+                document.getElementById('lista-e').innerHTML += `<tr><td><img src="${tempUrl}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;"></td><td><strong>${n}</strong></td><td>${d}</td><td><button style="color:red; border:none; background:none; cursor:pointer;">Borrar</button></td></tr>`;
+                cerrarM();
+            }
+        }
+    </script>
+</body>
+</html>

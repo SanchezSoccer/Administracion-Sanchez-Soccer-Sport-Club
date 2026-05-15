@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Posiciones - Sánchez Soccer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo-container"><img src="logo.png" class="main-logo"></div>
+            <nav class="menu">
+                <a href="index.html">🏠 Inicio</a>
+                <a href="equipos.html">⚽ Equipos</a>
+                <a href="partidos.html">📅 Partidos</a>
+                <a href="posiciones.html" class="active">🏆 Posiciones</a>
+                <a href="goleo.html">👟 Goleo</a>
+                <a href="jugadores.html">👥 Jugadores</a>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <div class="seccion-titulo"><h1>Tabla de Clasificación</h1></div>
+            <table class="tabla-admin">
+                <thead><tr><th>Pos</th><th>Equipo</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DG</th><th>PTS</th></tr></thead>
+                <tbody id="t-body"></tbody>
+            </table>
+        </main>
+    </div>
+    <script>
+        const equipos = [
+            { n: "Real Coatzacoalcos", g: 7, e: 1, p: 0, gf: 20, gc: 5 },
+            { n: "Deportivo Chávez", g: 5, e: 0, p: 3, gf: 15, gc: 10 },
+            { n: "Atlético Coatza", g: 2, e: 2, p: 4, gf: 9, gc: 12 }
+        ];
+        function cargar() {
+            const tbody = document.getElementById('t-body');
+            const lista = equipos.map(e => ({ ...e, pj: e.g+e.e+e.p, dg: e.gf-e.gc, pts: (e.g*3)+e.e })).sort((a,b) => b.pts - a.pts);
+            tbody.innerHTML = lista.map((e, i) => `<tr><td>${i+1}</td><td><strong>${e.n}</strong></td><td>${e.pj}</td><td>${e.g}</td><td>${e.e}</td><td>${e.p}</td><td>${e.gf}</td><td>${e.gc}</td><td>${e.dg}</td><td style="color:var(--naranja);font-weight:bold">${e.pts}</td></tr>`).join('');
+        }
+        cargar();
+    </script>
+</body>
+</html>

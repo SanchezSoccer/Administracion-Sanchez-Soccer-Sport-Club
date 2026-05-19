@@ -8,7 +8,7 @@
 <body>
     <div class="dashboard-container">
         <aside class="sidebar">
-            <div class="logo-container"><img src="logo.png" class="main-logo"></div>
+            <div class="logo-container"><img src="img/Logo.png" class="main-logo"></div>
             <nav class="menu">
                 <a href="index.html">🏠 Inicio</a>
                 <a href="equipos.html">⚽ Equipos</a>
@@ -18,26 +18,109 @@
                 <a href="jugadores.html">👥 Jugadores</a>
             </nav>
         </aside>
+
         <main class="main-content">
-            <div class="seccion-titulo"><h1>Tabla de Clasificación</h1></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <div class="seccion-titulo" style="margin-bottom: 0;">
+                    <h1>Tabla de Clasificación</h1>
+                </div>
+                
+                <div>
+                    <label style="font-weight: bold; margin-right: 10px; color: var(--texto);">Categoría:</label>
+                    <select id="select-categoria" onchange="cambiarCategoria()" style="padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd; font-weight: bold; color: var(--negro-sidebar);">
+                        <option value="libre">⚽ Libre</option>
+                        <option value="juvenil">👦 Juvenil</option>
+                        <option value="femenil">🙋‍♀️ Femenil</option>
+                        <option value="veteranos">👴 Veteranos</option>
+                    </select>
+                </div>
+            </div>
+
             <table class="tabla-admin">
-                <thead><tr><th>Pos</th><th>Equipo</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DG</th><th>PTS</th></tr></thead>
-                <tbody id="t-body"></tbody>
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Equipo</th>
+                        <th>PJ</th>
+                        <th>G</th>
+                        <th>E</th>
+                        <th>P</th>
+                        <th>GF</th>
+                        <th>GC</th>
+                        <th>DG</th>
+                        <th style="color:var(--naranja)">PTS</th>
+                    </tr>
+                </thead>
+                <tbody id="t-body">
+                    </tbody>
             </table>
         </main>
     </div>
+
     <script>
-        const equipos = [
-            { n: "Real Coatzacoalcos", g: 7, e: 1, p: 0, gf: 20, gc: 5 },
-            { n: "Deportivo Chávez", g: 5, e: 0, p: 3, gf: 15, gc: 10 },
-            { n: "Atlético Coatza", g: 2, e: 2, p: 4, gf: 9, gc: 12 }
+        // BASE DE DATOS DE EQUIPOS CON SU CATEGORÍA
+        const todosLosEquipos = [
+            // --- CATEGORÍA LIBRE ---
+            { n: "Real Coatzacoalcos", cat: "libre", g: 7, e: 1, p: 0, gf: 20, gc: 5 },
+            { n: "Deportivo Chávez", cat: "libre", g: 5, e: 0, p: 3, gf: 15, gc: 10 },
+            
+            // --- CATEGORÍA JUVENIL ---
+            { n: "Pumas Coatza (Juvenil)", cat: "juvenil", g: 4, e: 2, p: 1, gf: 12, gc: 7 },
+            { n: "Delfines de Coatzacoalcos", cat: "juvenil", g: 3, e: 1, p: 3, gf: 10, gc: 11 },
+            
+            // --- CATEGORÍA FEMENIL ---
+            { n: "Sirenas FC", cat: "femenil", g: 6, e: 0, p: 1, gf: 18, gc: 4 },
+            { n: "Lionas de Coatza", cat: "femenil", g: 2, e: 1, p: 4, gf: 8, gc: 14 },
+            
+            // --- CATEGORÍA VETERANOS ---
+            { n: "Atlético Coatza Senior", cat: "veteranos", g: 2, e: 2, p: 4, gf: 9, gc: 12 },
+            { n: "Combinado Rabelo", cat: "veteranos", g: 5, e: 1, p: 1, gf: 14, gc: 8 }
         ];
-        function cargar() {
+
+        function cargarTabla(categoriaSeleccionada) {
             const tbody = document.getElementById('t-body');
-            const lista = equipos.map(e => ({ ...e, pj: e.g+e.e+e.p, dg: e.gf-e.gc, pts: (e.g*3)+e.e })).sort((a,b) => b.pts - a.pts);
-            tbody.innerHTML = lista.map((e, i) => `<tr><td>${i+1}</td><td><strong>${e.n}</strong></td><td>${e.pj}</td><td>${e.g}</td><td>${e.e}</td><td>${e.p}</td><td>${e.gf}</td><td>${e.gc}</td><td>${e.dg}</td><td style="color:var(--naranja);font-weight:bold">${e.pts}</td></tr>`).join('');
+            
+            // 1. Filtrar los equipos que pertenecen a la categoría elegida
+            const filtrados = todosLosEquipos.filter(e => e.cat === categoriaSeleccionada);
+            
+            // 2. Calcular los puntos y ordenar de mayor a menor
+            const listaProcesada = filtrados.map(e => ({
+                ...e,
+                pj: e.g + e.e + e.p,
+                dg: e.gf - e.gc,
+                pts: (e.g * 3) + (e.e * 1)
+            })).sort((a, b) => b.pts - a.pts || b.dg - a.dg);
+
+            // 3. Renderizar la tabla limpia
+            if(listaProcesada.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#999;">No hay equipos registrados en esta categoría</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = listaProcesada.map((e, i) => `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td><strong>${e.n}</strong></td>
+                    <td>${e.pj}</td>
+                    <td>${e.g}</td>
+                    <td>${e.e}</td>
+                    <td>${e.p}</td>
+                    <td>${e.gf}</td>
+                    <td>${e.gc}</td>
+                    <td>${e.dg}</td>
+                    <td style="color:var(--naranja); font-weight:bold">${e.pts}</td>
+                </tr>
+            `).join('');
         }
-        cargar();
+
+        // Función que se ejecuta cuando el usuario cambia el Select
+        function cambiarCategoria() {
+            const cat = document.getElementById('select-categoria').value;
+            cargarTabla(cat);
+        }
+
+        // Cargar por defecto la categoría "libre" al abrir la página
+        cargarTabla('libre');
     </script>
 </body>
 </html>

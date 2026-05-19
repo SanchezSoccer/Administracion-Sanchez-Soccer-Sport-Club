@@ -18,16 +18,70 @@
                 <a href="jugadores.html">👥 Jugadores</a>
             </nav>
         </aside>
+
         <main class="main-content">
-            <div class="seccion-titulo"><h1>Líderes de Goleo</h1></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <div class="seccion-titulo" style="margin-bottom: 0;">
+                    <h1>Líderes de Goleo</h1>
+                </div>
+                <div>
+                    <label style="font-weight: bold; margin-right: 10px;">Categoría:</label>
+                    <select id="select-categoria" onchange="cambiarGoleo()" style="padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd; font-weight: bold;">
+                        <option value="libre">⚽ Libre</option>
+                        <option value="juvenil">👦 Juvenil</option>
+                        <option value="femenil">🙋‍♀️ Femenil</option>
+                        <option value="veteranos">👴 Veteranos</option>
+                    </select>
+                </div>
+            </div>
+
             <table class="tabla-admin">
-                <thead><tr><th>Pos</th><th>Jugador</th><th>Equipo</th><th>Goles</th></tr></thead>
-                <tbody>
-                    <tr><td>1</td><td><strong>Rabelo Jr.</strong></td><td>Real Coatzacoalcos</td><td>14</td></tr>
-                    <tr><td>2</td><td><strong>Luis Chávez</strong></td><td>Deportivo Chávez</td><td>11</td></tr>
-                </tbody>
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Jugador</th>
+                        <th>Equipo</th>
+                        <th>Goles</th>
+                    </tr>
+                </thead>
+                <tbody id="goleo-body">
+                    </tbody>
             </table>
         </main>
     </div>
+
+    <script>
+        const goleadores = [
+            { nombre: "Rabelo Jr.", equipo: "Real Coatzacoalcos", goles: 14, cat: "libre" },
+            { nombre: "Luis Chávez", equipo: "Deportivo Chávez", goles: 11, cat: "libre" },
+            { nombre: "Checo Pérez", equipo: "Pumas Coatza", goles: 9, cat: "juvenil" },
+            { nombre: "Alejandra S.", equipo: "Sirenas FC", goles: 15, cat: "femenil" }
+        ];
+
+        function cargarGoleo(cat) {
+            const tbody = document.getElementById('goleo-body');
+            const filtrados = goleadores.filter(g => g.cat === cat).sort((a,b) => b.goles - a.goles);
+
+            if(filtrados.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#999;">No hay goles registrados aquí</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtrados.map((g, i) => `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td><strong>${g.nombre}</strong></td>
+                    <td>${g.equipo}</td>
+                    <td style="color:var(--naranja); font-weight:bold; font-size:1.1rem;">${g.goles}</td>
+                </tr>
+            `).join('');
+        }
+
+        function cambiarGoleo() {
+            cargarGoleo(document.getElementById('select-categoria').value);
+        }
+
+        cargarGoleo('libre');
+    </script>
 </body>
 </html>

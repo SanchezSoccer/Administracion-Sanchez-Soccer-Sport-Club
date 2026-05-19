@@ -2,13 +2,106 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sánchez Soccer - Panel</title>
+    <title>Sánchez Soccer - Panel Principal</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+       
+        .grid-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .card-stat {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--sombra);
+            border-bottom: 4px solid #ddd;
+            transition: transform 0.3s;
+        }
+        .card-stat:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-libre { border-color: var(--naranja); }
+        .stat-juvenil { border-color: #007BFF; }
+        .stat-femenil { border-color: #E83E8C; }
+        .stat-veteranos { border-color: #28A745; }
+
+        .card-stat h3 {
+            font-size: 0.9rem;
+            color: #636E72;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .card-stat .numero {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--negro-sidebar);
+        }
+
+      
+        .grid-accesos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card-acceso {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--sombra);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: var(--texto);
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .card-acceso:hover {
+            border-color: var(--naranja);
+            background: #FFF9F5;
+        }
+
+        .acceso-info h4 {
+            font-size: 1.1rem;
+            color: var(--negro-sidebar);
+            margin-bottom: 5px;
+        }
+        .acceso-info p {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+        }
+
+        .btn-ir {
+            background: #F4F7F6;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--naranja);
+            transition: 0.3s;
+        }
+        .card-acceso:hover .btn-ir {
+            background: var(--naranja);
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-container">
         <aside class="sidebar">
-            <div class="logo-container"><img src="logo.png" class="main-logo"></div>
+            <div class="logo-container"><img src="img/Logo.png" class="main-logo"></div>
             <nav class="menu">
                 <a href="index.html" class="active">🏠 Inicio</a>
                 <a href="equipos.html">⚽ Equipos</a>
@@ -18,20 +111,68 @@
                 <a href="jugadores.html">👥 Jugadores</a>
             </nav>
         </aside>
+
         <main class="main-content">
             <div class="seccion-titulo">
-                <h1>Bienvenido, Administrador</h1>
-                <p>Gestión de la liga Sánchez Soccer Coatzacoalcos 2026.</p>
+                <h1>Panel de Administración</h1>
+                <p>Liga Regional Sánchez Soccer Coatzacoalcos | Temporada 2026</p>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-                <div style="background:white; padding:20px; border-radius:15px; box-shadow:var(--sombra);">
-                    <h3 style="color:var(--naranja)">Equipos</h3>
-                    <p style="font-size:2rem; font-weight:bold;">12</p>
+
+            <h2 style="font-size: 1.3rem; margin-bottom: 15px; color: var(--negro-sidebar);">Equipos Inscritos</h2>
+            <div class="grid-stats">
+                <div class="card-stat stat-libre">
+                    <h3>Categoría Libre</h3>
+                    <div class="numero">14</div>
                 </div>
-                <div style="background:white; padding:20px; border-radius:15px; box-shadow:var(--sombra);">
-                    <h3 style="color:var(--naranja)">Próxima Jornada</h3>
-                    <p style="font-size:2rem; font-weight:bold;">#5</p>
+                <div class="card-stat stat-juvenil">
+                    <h3>Categoría Juvenil</h3>
+                    <div class="numero">10</div>
                 </div>
+                <div class="card-stat stat-femenil">
+                    <h3>Categoría Femenil</h3>
+                    <div class="numero">8</div>
+                </div>
+                <div class="card-stat stat-veteranos">
+                    <h3>Veteranos</h3>
+                    <div class="numero">12</div>
+                </div>
+            </div>
+
+            <h2 style="font-size: 1.3rem; margin-bottom: 15px; color: var(--negro-sidebar);">Acciones Frecuentes</h2>
+            <div class="grid-accesos">
+                
+                <a href="jugadores.html" class="card-acceso">
+                    <div class="acceso-info">
+                        <h4>🖨️ Imprimir Credenciales</h4>
+                        <p>Genera identificaciones oficiales para los jugadores.</p>
+                    </div>
+                    <div class="btn-ir">→</div>
+                </a>
+
+                <a href="posiciones.html" class="card-acceso">
+                    <div class="acceso-info">
+                        <h4>🏆 Actualizar Tabla General</h4>
+                        <p>Modifica los partidos ganados, empates y goles.</p>
+                    </div>
+                    <div class="btn-ir">→</div>
+                </a>
+
+                <a href="partidos.html" class="card-acceso">
+                    <div class="acceso-info">
+                        <h4>📅 Capturar Rol de Juegos</h4>
+                        <p>Gestiona los horarios y fechas de la jornada actual.</p>
+                    </div>
+                    <div class="btn-ir">→</div>
+                </a>
+
+                <a href="equipos.html" class="card-acceso">
+                    <div class="acceso-info">
+                        <h4>⚽ Alta de Nuevos Clubes</h4>
+                        <p>Registra escudos, delegados y asigna categorías.</p>
+                    </div>
+                    <div class="btn-ir">→</div>
+                </a>
+
             </div>
         </main>
     </div>

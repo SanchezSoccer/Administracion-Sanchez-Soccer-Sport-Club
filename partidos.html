@@ -8,7 +8,7 @@
 <body>
     <div class="dashboard-container">
         <aside class="sidebar">
-            <div class="logo-container"><img src="logo.png" class="main-logo"></div>
+            <div class="logo-container"><img src="img/Logo.png" class="main-logo"></div>
             <nav class="menu">
                 <a href="index.html">🏠 Inicio</a>
                 <a href="equipos.html">⚽ Equipos</a>
@@ -18,17 +18,69 @@
                 <a href="jugadores.html">👥 Jugadores</a>
             </nav>
         </aside>
+
         <main class="main-content">
-            <div class="seccion-titulo"><h1>Calendario Jornada 5</h1></div>
-            <div style="display:grid; gap:15px;">
-                <div style="background:white; padding:20px; border-radius:15px; box-shadow:var(--sombra); display:flex; justify-content:space-between; align-items:center;">
-                    <span style="flex:1; text-align:right;"><strong>Real Coatzacoalcos</strong></span>
-                    <span style="background:var(--naranja); color:white; padding:5px 15px; border-radius:5px; margin:0 20px;">VS</span>
-                    <span style="flex:1;"><strong>Deportivo Chávez</strong></span>
-                    <span>16 May | 10:00 AM</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <div class="seccion-titulo" style="margin-bottom: 0;">
+                    <h1>Rol de Juegos</h1>
+                    <p>Jornada 5 - Temporada 2026</p>
+                </div>
+                
+                <div>
+                    <label style="font-weight: bold; margin-right: 10px;">Categoría:</label>
+                    <select id="select-categoria" onchange="cambiarPartidos()" style="padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd; font-weight: bold;">
+                        <option value="libre">⚽ Libre</option>
+                        <option value="juvenil">👦 Juvenil</option>
+                        <option value="femenil">🙋‍♀️ Femenil</option>
+                        <option value="veteranos">👴 Veteranos</option>
+                    </select>
                 </div>
             </div>
+
+            <div id="partidos-container" style="display: grid; gap: 15px;">
+                </div>
         </main>
     </div>
+
+    <script>
+  
+        const todosLosPartidos = [
+            { local: "Real Coatzacoalcos", visitante: "Deportivo Chávez", fecha: "Sábado 23 May", hora: "16:00 hrs", cat: "libre" },
+            { local: "Pumas Coatza (Juv)", visitante: "Delfines de Coatza", fecha: "Sábado 23 May", hora: "10:00 AM", cat: "juvenil" },
+            { local: "Sirenas FC", visitante: "Lionas de Coatza", fecha: "Domingo 24 May", hora: "09:00 AM", cat: "femenil" },
+            { local: "Atlético Coatza Senior", visitante: "Combinado Rabelo", fecha: "Domingo 24 May", hora: "12:00 hrs", cat: "veteranos" }
+        ];
+
+        function cargarPartidos(catSeleccionada) {
+            const container = document.getElementById('partidos-container');
+            
+            const filtrados = todosLosPartidos.filter(p => p.cat === catSeleccionada);
+
+            if(filtrados.length === 0) {
+                container.innerHTML = `<div style="background:white; padding:20px; border-radius:15px; text-align:center; color:#999; box-shadow:var(--sombra);">No hay partidos programados para esta categoría.</div>`;
+                return;
+            }
+
+         
+            container.innerHTML = filtrados.map(p => `
+                <div style="background:white; padding:20px; border-radius:15px; box-shadow:var(--sombra); display:flex; align-items:center; justify-content:space-between;">
+                    <div style="flex:1; text-align:right;"><strong>${p.local}</strong></div>
+                    <div style="background:var(--naranja); color:white; padding:5px 15px; border-radius:8px; margin:0 20px; font-weight:bold;">VS</div>
+                    <div style="flex:1;"><strong>${p.visitante}</strong></div>
+                    <div style="border-left:1px solid #eee; padding-left:20px; color:#666; font-size:0.9rem; min-width:140px;">
+                        📅 ${p.fecha}<br>
+                        ⏰ ${p.hora}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function cambiarPartidos() {
+            cargarPartidos(document.getElementById('select-categoria').value);
+        }
+
+     
+        cargarPartidos('libre');
+    </script>
 </body>
 </html>

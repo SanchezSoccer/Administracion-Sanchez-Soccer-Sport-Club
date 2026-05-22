@@ -189,7 +189,6 @@
 
 
             <script>
-                // Aseguramos que el HTML ya exista en el navegador antes de buscar los IDs
                 document.addEventListener("DOMContentLoaded", () => {
                     actualizarContadores();
                 });
@@ -212,12 +211,10 @@
                             return cat ? equipos.filter(e => e.categoria_id === cat.id).length : 0;
                         };
 
-                        // Pintamos los ceros reales
                         document.getElementById('count-libre').innerText = contar('libre');
                         document.getElementById('count-juvenil').innerText = contar('juvenil');
                         document.getElementById('count-femenil').innerText = contar('femenil');
 
-                        // Soporte por si se llama veteranos o extra en tu BD
                         const numVeteranos = contar('veteranos') || contar('extra');
                         document.getElementById('count-veteranos').innerText = numVeteranos;
 

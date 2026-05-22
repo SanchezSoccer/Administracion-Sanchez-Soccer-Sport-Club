@@ -127,16 +127,12 @@
 
     <script>
         let listaCategoriasBD = [];
-        // Aquí vamos a guardar el archivo real que suba el usuario
         let archivoImagenReal = null;
 
-        // Capturar el archivo real para poder subirlo después
         document.getElementById('e-logo').onchange = function (e) {
             const file = e.target.files[0];
             if (file) {
-                archivoImagenReal = file; // Guardamos el archivo binario
-
-                // Esto es solo para que el usuario vea la vista previa antes de guardar
+                archivoImagenReal = file; 
                 document.getElementById('img-e').src = URL.createObjectURL(file);
                 document.getElementById('img-e').style.display = 'block';
                 document.getElementById('txt-e').style.display = 'none';
@@ -194,7 +190,6 @@
                 }
 
                 tbody.innerHTML = equipos.map(eq => {
-                    // Si no hay logo en la BD, genera el avatar por defecto
                     const escudo = eq.telefono || `https://ui-avatars.com/api/?name=${encodeURIComponent(eq.nombre)}&background=ddd&color=333`;
 
                     return `
@@ -213,7 +208,6 @@
             }
         }
 
-        // Guardar equipo con subida de imagen real a Storage
         async function guardarE() {
             const nombre = document.getElementById('n-eq').value.trim();
             const delegado = document.getElementById('d-eq').value.trim();
@@ -236,9 +230,7 @@
             try {
                 let urlImagenFinal = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombre)}&background=ddd&color=333`;
 
-                // Si el usuario seleccionó un archivo de imagen, lo subimos a Storage primero
                 if (archivoImagenReal) {
-                    // Creamos un nombre único para el archivo usando el tiempo actual para que no se repita
                     const nombreArchivo = `${Date.now()}_${archivoImagenReal.name.replace(/\s+/g, '_')}`;
 
                     const { data: uploadData, error: uploadError } = await window.supabase
@@ -248,7 +240,6 @@
 
                     if (uploadError) throw uploadError;
 
-                    // Obtenemos la URL pública que generó Supabase para esa imagen
                     const { data: urlData } = window.supabase
                         .storage
                         .from('escudos')
@@ -257,7 +248,6 @@
                     urlImagenFinal = urlData.publicUrl;
                 }
 
-                // Insertamos en la base de datos guardando el link real de internet en 'telefono'
                 const { error } = await window.supabase
                     .from('equipos')
                     .insert([

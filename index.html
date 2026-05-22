@@ -1,11 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Sánchez Soccer - Panel Principal</title>
     <link rel="stylesheet" href="style.css">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+
+        const url = 'https://akodlefkapiskfnkaujg.supabase.co';
+        const key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrb2RsZWZrYXBpc2tmbmthdWpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjU2ODYsImV4cCI6MjA4OTcwMTY4Nn0.pMoPvhtUSor6zOUF5Py6I1eJuhN1ZIU8Tt0AEZiqfsk';
+
+        window.supabase = supabase.createClient(url, key);
+        async function probarConexion() {
+            try {
+                const { data, error } = await window.supabase.from('categorias').select('*');
+
+                if (error) {
+                    console.error('Error de respuesta de Supabase:', error.message);
+                } else {
+                    console.log('Conexión exitosa, Datos recibidos:', data);
+                }
+            } catch (err) {
+                console.error('Error: Base no recibe datos', err);
+            }
+        }
+        probarConexion();
+    </script>
+
     <style>
-       
         .grid-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -21,14 +47,26 @@
             border-bottom: 4px solid #ddd;
             transition: transform 0.3s;
         }
+
         .card-stat:hover {
             transform: translateY(-5px);
         }
 
-        .stat-libre { border-color: var(--naranja); }
-        .stat-juvenil { border-color: #007BFF; }
-        .stat-femenil { border-color: #E83E8C; }
-        .stat-veteranos { border-color: #28A745; }
+        .stat-libre {
+            border-color: var(--naranja);
+        }
+
+        .stat-juvenil {
+            border-color: #007BFF;
+        }
+
+        .stat-femenil {
+            border-color: #E83E8C;
+        }
+
+        .stat-veteranos {
+            border-color: #28A745;
+        }
 
         .card-stat h3 {
             font-size: 0.9rem;
@@ -44,7 +82,7 @@
             color: var(--negro-sidebar);
         }
 
-      
+
         .grid-accesos {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -75,6 +113,7 @@
             color: var(--negro-sidebar);
             margin-bottom: 5px;
         }
+
         .acceso-info p {
             font-size: 0.85rem;
             color: #7f8c8d;
@@ -92,16 +131,18 @@
             color: var(--naranja);
             transition: 0.3s;
         }
+
         .card-acceso:hover .btn-ir {
             background: var(--naranja);
             color: white;
         }
     </style>
 </head>
+
 <body>
     <div class="dashboard-container">
         <aside class="sidebar">
-            <div class="logo-container"><img src="img/Logo.png" class="main-logo"></div>
+            <div class="logo-container"><img src="Logo.png" class="main-logo"></div>
             <nav class="menu">
                 <a href="index.html" class="active">🏠 Inicio</a>
                 <a href="equipos.html">⚽ Equipos</a>
@@ -122,25 +163,91 @@
             <div class="grid-stats">
                 <div class="card-stat stat-libre">
                     <h3>Categoría Libre</h3>
-                    <div class="numero">14</div>
+                    <div class="numero" id="count-libre">...</div>
                 </div>
                 <div class="card-stat stat-juvenil">
                     <h3>Categoría Juvenil</h3>
-                    <div class="numero">10</div>
+                    <div class="numero" id="count-juvenil">...</div>
                 </div>
                 <div class="card-stat stat-femenil">
                     <h3>Categoría Femenil</h3>
-                    <div class="numero">8</div>
+                    <div class="numero" id="count-femenil">...</div>
                 </div>
                 <div class="card-stat stat-veteranos">
                     <h3>Veteranos</h3>
-                    <div class="numero">12</div>
+                    <div class="numero" id="count-veteranos">...</div>
                 </div>
             </div>
 
+
+
+
+
+
+
+
+
+
+            <script>
+                // Aseguramos que el HTML ya exista en el navegador antes de buscar los IDs
+                document.addEventListener("DOMContentLoaded", () => {
+                    actualizarContadores();
+                });
+
+                async function actualizarContadores() {
+                    try {
+                        const [resCategorias, resEquipos] = await Promise.all([
+                            window.supabase.from('categorias').select('*'),
+                            window.supabase.from('equipos').select('categoria_id')
+                        ]);
+
+                        if (resCategorias.error) throw resCategorias.error;
+                        if (resEquipos.error) throw resEquipos.error;
+
+                        const categorias = resCategorias.data;
+                        const equipos = resEquipos.data;
+
+                        const contar = (nombreCat) => {
+                            const cat = categorias.find(c => c.nombre.toLowerCase().includes(nombreCat.toLowerCase()));
+                            return cat ? equipos.filter(e => e.categoria_id === cat.id).length : 0;
+                        };
+
+                        // Pintamos los ceros reales
+                        document.getElementById('count-libre').innerText = contar('libre');
+                        document.getElementById('count-juvenil').innerText = contar('juvenil');
+                        document.getElementById('count-femenil').innerText = contar('femenil');
+
+                        // Soporte por si se llama veteranos o extra en tu BD
+                        const numVeteranos = contar('veteranos') || contar('extra');
+                        document.getElementById('count-veteranos').innerText = numVeteranos;
+
+                        console.log("📊 Contadores actualizados con éxito.");
+
+                    } catch (err) {
+                        console.error('❌ Error detallado:', err);
+                        // Si algo truena, forzamos que pinte "Err" para saber que falló la lógica
+                        document.getElementById('count-libre').innerText = 'Err';
+                        document.getElementById('count-juvenil').innerText = 'Err';
+                        document.getElementById('count-femenil').innerText = 'Err';
+                        document.getElementById('count-veteranos').innerText = 'Err';
+                    }
+                }
+            </script>
+
+
+
+
+
+
+
+
+
+
+
+
             <h2 style="font-size: 1.3rem; margin-bottom: 15px; color: var(--negro-sidebar);">Acciones Frecuentes</h2>
             <div class="grid-accesos">
-                
+
                 <a href="jugadores.html" class="card-acceso">
                     <div class="acceso-info">
                         <h4>🖨️ Imprimir Credenciales</h4>
@@ -177,4 +284,5 @@
         </main>
     </div>
 </body>
+
 </html>

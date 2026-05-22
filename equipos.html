@@ -1,14 +1,42 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Equipos - Sánchez Soccer</title>
     <link rel="stylesheet" href="style.css">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+
+        const url = 'https://akodlefkapiskfnkaujg.supabase.co';
+        const key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrb2RsZWZrYXBpc2tmbmthdWpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjU2ODYsImV4cCI6MjA4OTcwMTY4Nn0.pMoPvhtUSor6zOUF5Py6I1eJuhN1ZIU8Tt0AEZiqfsk';
+
+        window.supabase = supabase.createClient(url, key);
+        async function probarConexion() {
+            try {
+                const { data, error } = await window.supabase.from('categorias').select('*');
+
+                if (error) {
+                    console.error('Error de respuesta de Supabase:', error.message);
+                } else {
+                    console.log('Conexión exitosa, Datos recibidos:', data);
+                }
+            } catch (err) {
+                console.error('Error: Base no recibe datos', err);
+            }
+        }
+        probarConexion();
+    </script>
+
 </head>
+
 <body>
     <div class="dashboard-container">
         <aside class="sidebar">
-            <div class="logo-container"><img src="img/Logo.png" class="main-logo"></div>
+            <div class="logo-container"><img src="Logo.png" class="main-logo"></div>
             <nav class="menu">
                 <a href="index.html">🏠 Inicio</a>
                 <a href="equipos.html" class="active">⚽ Equipos</a>
@@ -24,10 +52,11 @@
                 <div class="seccion-titulo" style="margin-bottom: 0;">
                     <h1>Gestión de Equipos</h1>
                 </div>
-                
+
                 <div style="display: flex; gap: 15px; align-items: center;">
                     <label style="font-weight: bold; color: var(--texto);">Ver Categoría:</label>
-                    <select id="filtro-categoria" onchange="filtrarTabla()" style="padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd; font-weight: bold;">
+                    <select id="filtro-categoria" onchange="filtrarTabla()"
+                        style="padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd; font-weight: bold;">
                         <option value="libre">⚽ Libre</option>
                         <option value="juvenil">👦 Juvenil</option>
                         <option value="femenil">🙋‍♀️ Femenil</option>
@@ -48,7 +77,7 @@
                     </tr>
                 </thead>
                 <tbody id="lista-e">
-                    </tbody>
+                </tbody>
             </table>
         </main>
     </div>
@@ -56,10 +85,11 @@
     <div id="modal-e" class="modal-overlay">
         <div class="modal-box">
             <h3>Registrar Club</h3><br>
-            
+
             <div style="text-align: center; margin-bottom: 15px;">
                 <label for="e-logo" style="cursor: pointer;">
-                    <div id="escudo-preview" style="width: 70px; height: 70px; background: #eee; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; overflow: hidden;">
+                    <div id="escudo-preview"
+                        style="width: 70px; height: 70px; background: #eee; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; overflow: hidden;">
                         <span id="txt-e" style="font-size: 0.8rem; color: #999;">Logo</span>
                         <img id="img-e" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
                     </div>
@@ -69,13 +99,16 @@
             </div>
 
             <label style="font-size: 0.85rem; font-weight: bold;">Nombre del Equipo</label>
-            <input type="text" id="n-eq" placeholder="Ej. Real Coatzacoalcos" style="width:100%; padding:10px; margin: 5px 0 15px 0; border-radius:8px; border:1px solid #ddd;">
-            
+            <input type="text" id="n-eq" placeholder="Ej. Real Coatzacoalcos"
+                style="width:100%; padding:10px; margin: 5px 0 15px 0; border-radius:8px; border:1px solid #ddd;">
+
             <label style="font-size: 0.85rem; font-weight: bold;">Nombre del Delegado</label>
-            <input type="text" id="d-eq" placeholder="Ej. Luis Chávez" style="width:100%; padding:10px; margin: 5px 0 15px 0; border-radius:8px; border:1px solid #ddd;">
-            
+            <input type="text" id="d-eq" placeholder="Ej. Luis Chávez"
+                style="width:100%; padding:10px; margin: 5px 0 15px 0; border-radius:8px; border:1px solid #ddd;">
+
             <label style="font-size: 0.85rem; font-weight: bold;">Asignar Categoría</label>
-            <select id="reg-cat" style="width:100%; padding:10px; margin: 5px 0 20px 0; border-radius:8px; border:1px solid #ddd; font-weight: bold;">
+            <select id="reg-cat"
+                style="width:100%; padding:10px; margin: 5px 0 20px 0; border-radius:8px; border:1px solid #ddd; font-weight: bold;">
                 <option value="libre">Libre</option>
                 <option value="juvenil">Juvenil</option>
                 <option value="femenil">Femenil</option>
@@ -83,106 +116,187 @@
             </select>
 
             <button class="btn-primary" style="width:100%" onclick="guardarE()">Guardar Equipo</button>
-            <button onclick="cerrarM()" style="width:100%; background:none; border:none; color:red; margin-top:10px; cursor:pointer;">Cancelar</button>
+            <button onclick="cerrarM()"
+                style="width:100%; background:none; border:none; color:red; margin-top:10px; cursor:pointer;">Cancelar</button>
         </div>
     </div>
 
+
+
+
+
     <script>
-        // Array global en memoria para guardar los equipos ingresados
-        let databaseEquipos = [
-            { n: "Real Coatzacoalcos", d: "Luis Chávez", cat: "libre", logo: "https://ui-avatars.com/api/?name=RC&background=FF6600&color=fff" },
-            { n: "Deportivo Chávez", d: "Chávez Sr.", cat: "libre", logo: "https://ui-avatars.com/api/?name=DC&background=121212&color=fff" },
-            { n: "Pumas Coatza (Juv)", d: "Prof. Ale", cat: "juvenil", logo: "https://ui-avatars.com/api/?name=PC&background=002244&color=fff" }
-        ];
+        let listaCategoriasBD = [];
+        // Aquí vamos a guardar el archivo real que suba el usuario
+        let archivoImagenReal = null;
 
-        let logoTemp = "";
-
-        // Capturar y previsualizar la imagen del escudo subido
-        document.getElementById('e-logo').onchange = function(e) {
-            const [file] = e.target.files;
+        // Capturar el archivo real para poder subirlo después
+        document.getElementById('e-logo').onchange = function (e) {
+            const file = e.target.files[0];
             if (file) {
-                logoTemp = URL.createObjectURL(file);
-                document.getElementById('img-e').src = logoTemp;
+                archivoImagenReal = file; // Guardamos el archivo binario
+
+                // Esto es solo para que el usuario vea la vista previa antes de guardar
+                document.getElementById('img-e').src = URL.createObjectURL(file);
                 document.getElementById('img-e').style.display = 'block';
                 document.getElementById('txt-e').style.display = 'none';
             }
         };
 
-        function abrirM() { 
-            document.getElementById('modal-e').style.display = 'flex'; 
+        function abrirM() {
+            document.getElementById('modal-e').style.display = 'flex';
         }
 
-        function cerrarM() { 
+        function cerrarM() {
             document.getElementById('modal-e').style.display = 'none';
-            // Limpiar formulario al cerrar
             document.getElementById('n-eq').value = "";
             document.getElementById('d-eq').value = "";
             document.getElementById('img-e').style.display = 'none';
             document.getElementById('txt-e').style.display = 'block';
-            logoTemp = "";
+            archivoImagenReal = null; // Limpiamos el archivo
         }
 
-        // Renderizar la tabla usando únicamente la categoría seleccionada en el filtro principal
-        function filtrarTabla() {
-            const categoriaFiltro = document.getElementById('filtro-categoria').value;
-            const tbody = document.getElementById('lista-e');
-            
-            const filtrados = databaseEquipos.filter(eq => eq.cat === categoriaFiltro);
+        async function inicializarPantalla() {
+            try {
+                const { data, error } = await window.supabase.from('categorias').select('*');
+                if (error) throw error;
+                listaCategoriasBD = data;
+                filtrarTabla();
+            } catch (err) {
+                console.error('❌ Error al precargar categorías:', err.message);
+            }
+        }
 
-            if (filtrados.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#999;">No hay equipos registrados en esta categoría</td></tr>`;
+        async function filtrarTabla() {
+            const categoriaFiltroSelect = document.getElementById('filtro-categoria').value;
+            const tbody = document.getElementById('lista-e');
+
+            const catEncontrada = listaCategoriasBD.find(c =>
+                c.nombre.toLowerCase().includes(categoriaFiltroSelect.toLowerCase())
+            );
+
+            if (!catEncontrada) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#999;">Cargando datos...</td></tr>`;
                 return;
             }
 
-            tbody.innerHTML = filtrados.map((eq, index) => `
-                <tr>
-                    <td><img src="${eq.logo}" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border: 1px solid #eee;"></td>
-                    <td><strong>${eq.n}</strong></td>
-                    <td>${eq.d}</td>
-                    <td style="text-transform: uppercase; font-size: 0.8rem; font-weight: bold; color: #666;">${eq.cat}</td>
-                    <td><button onclick="eliminarEquipo('${eq.n}')" style="border:none; color:red; background:none; cursor:pointer; font-weight:bold;">Eliminar</button></td>
-                </tr>
-            `).join('');
+            try {
+                const { data: equipos, error } = await window.supabase
+                    .from('equipos')
+                    .select('*')
+                    .eq('categoria_id', catEncontrada.id);
+
+                if (error) throw error;
+
+                if (!equipos || equipos.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#999;">No hay equipos registrados en esta categoría</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = equipos.map(eq => {
+                    // Si no hay logo en la BD, genera el avatar por defecto
+                    const escudo = eq.telefono || `https://ui-avatars.com/api/?name=${encodeURIComponent(eq.nombre)}&background=ddd&color=333`;
+
+                    return `
+                        <tr>
+                            <td><img src="${escudo}" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border: 1px solid #eee;"></td>
+                            <td><strong>${eq.nombre}</strong></td>
+                            <td>${eq.delegado || 'Sin Asignar'}</td>
+                            <td style="text-transform: uppercase; font-size: 0.8rem; font-weight: bold; color: #666;">${catEncontrada.nombre}</td>
+                            <td><button onclick="eliminarEquipo('${eq.id}', '${eq.nombre}')" style="border:none; color:red; background:none; cursor:pointer; font-weight:bold;">Eliminar</button></td>
+                        </tr>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error('❌ Error al obtener equipos:', err.message);
+            }
         }
 
-        // Registrar el nuevo equipo en la base de datos temporal
-        function guardarE() {
-            const nombre = document.getElementById('n-eq').value;
-            const delegado = document.getElementById('d-eq').value;
-            const categoria = document.getElementById('reg-cat').value;
-            
-            // Si no suben logo, asigna uno automático usando sus iniciales
-            const escudoFinal = logoTemp || `https://ui-avatars.com/api/?name=${encodeURIComponent(nombre)}&background=ddd&color=333`;
+        // Guardar equipo con subida de imagen real a Storage
+        async function guardarE() {
+            const nombre = document.getElementById('n-eq').value.trim();
+            const delegado = document.getElementById('d-eq').value.trim();
+            const categoriaSelect = document.getElementById('reg-cat').value;
 
-            if (nombre && delegado) {
-                databaseEquipos.push({
-                    n: nombre,
-                    d: delegado,
-                    cat: categoria,
-                    logo: escudoFinal
-                });
+            if (!nombre || !delegado) {
+                alert("Por favor rellena el nombre y el delegado.");
+                return;
+            }
 
-                // Sincronizar el filtro de vista con la categoría del equipo recién guardado
-                document.getElementById('filtro-categoria').value = categoria;
-                
-                filtrados = [];
+            const catEncontrada = listaCategoriasBD.find(c =>
+                c.nombre.toLowerCase().includes(categoriaSelect.toLowerCase())
+            );
+
+            if (!catEncontrada) {
+                alert("Error al validar la categoría.");
+                return;
+            }
+
+            try {
+                let urlImagenFinal = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombre)}&background=ddd&color=333`;
+
+                // Si el usuario seleccionó un archivo de imagen, lo subimos a Storage primero
+                if (archivoImagenReal) {
+                    // Creamos un nombre único para el archivo usando el tiempo actual para que no se repita
+                    const nombreArchivo = `${Date.now()}_${archivoImagenReal.name.replace(/\s+/g, '_')}`;
+
+                    const { data: uploadData, error: uploadError } = await window.supabase
+                        .storage
+                        .from('escudos')
+                        .upload(nombreArchivo, archivoImagenReal);
+
+                    if (uploadError) throw uploadError;
+
+                    // Obtenemos la URL pública que generó Supabase para esa imagen
+                    const { data: urlData } = window.supabase
+                        .storage
+                        .from('escudos')
+                        .getPublicUrl(nombreArchivo);
+
+                    urlImagenFinal = urlData.publicUrl;
+                }
+
+                // Insertamos en la base de datos guardando el link real de internet en 'telefono'
+                const { error } = await window.supabase
+                    .from('equipos')
+                    .insert([
+                        {
+                            nombre: nombre,
+                            delegado: delegado,
+                            categoria_id: catEncontrada.id,
+                            telefono: urlImagenFinal
+                        }
+                    ]);
+
+                if (error) throw error;
+
+                document.getElementById('filtro-categoria').value = categoriaSelect;
                 filtrarTabla();
                 cerrarM();
-            } else {
-                alert("Por favor rellena el nombre y el delegado.");
+
+            } catch (err) {
+                alert("Error al guardar el equipo con su imagen: " + err.message);
+                console.error(err);
             }
         }
 
-        // Eliminar equipo del array
-        function eliminarEquipo(nombreEquipo) {
-            if(confirm(`¿Seguro que deseas eliminar a ${nombreEquipo}?`)) {
-                databaseEquipos = databaseEquipos.filter(eq => eq.n !== nombreEquipo);
-                filtrarTabla();
+        async function eliminarEquipo(idEquipo, nombreEquipo) {
+            if (confirm(`¿Seguro que deseas eliminar a ${nombreEquipo}?`)) {
+                try {
+                    const { error } = await window.supabase.from('equipos').delete().eq('id', idEquipo);
+                    if (error) throw error;
+                    filtrarTabla();
+                } catch (err) {
+                    alert("No se pudo eliminar: " + err.message);
+                }
             }
         }
 
-        // Cargar la lista inicial de categoría Libre al cargar el archivo
-        filtrarTabla();
+        document.addEventListener("DOMContentLoaded", () => {
+            inicializarPantalla();
+        });
     </script>
 </body>
-</html> 
+
+</html>
